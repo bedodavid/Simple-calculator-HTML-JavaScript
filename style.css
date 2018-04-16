@@ -1,0 +1,146 @@
+body{
+    margin-top: 10%;
+}
+.row{
+   margin: 2px !important; 
+}
+
+.btn-group-lg > .btn{
+  padding:6px 12px;
+  font-size:14px;  
+}
+
+.btn-group-lg> .btn:hover{
+    text-decoration: underline;
+}
+
+.inputString{
+    width: 80%;   
+    text-align: right;
+    font-size: 26px;
+    border:none;
+    border-radius: 3px;
+    cursor:default;    
+}
+
+.inputString::-ms-clear {
+    display: none;
+}
+.inputString:focus{
+    outline: none;
+}
+
+.inputRow{
+ display:flex;
+ justify-content: center;
+ margin-bottom: 2%;
+}
+
+.showInput{
+  width: 78%; 
+  text-align: right;
+ }
+
+.showRow{
+ display:flex;
+ justify-content: center;
+}
+
+.container{
+    overflow-x: auto;
+    overflow-y: auto;
+    justify-content: center;
+    vertical-align: middle;
+    background-color: #e6e6e6;
+    width: 820px;
+    height: 350px;
+    margin: auto;
+    
+}
+
+.buttonrows{
+    margin: 2px 5px 2px 5px;
+}
+
+.emptyRow{
+ height: 6%;   
+}
+
+[class*="col-"] {
+ padding-left:0;
+ padding-right: 0;
+}
+
+[class*="btn-type-"]{
+    width: 95%;
+    margin: 2px;
+    font-size: 20px;
+    align-self: center;
+    border:none; 
+    padding: 5px 0 5px 0;
+    border-radius: 5px;
+}
+
+[class*="btn-type-"]:hover{
+  filter: brightness(90%);  
+}
+
+/* number buttons*/
+.btn-type-1{
+  background-color: #ffffff;  
+}
+
+/* primary arithemthic buttons*/
+.btn-type-2{
+  background-color: #99d6ff;  
+}
+
+
+/* more complex arithmetic operations
+.btn-type-3{
+  background-color: #99d6ff;  
+}
+*/
+
+/*clear, delete buttons*/
+.btn-type-4{
+  background-color: #ffebee;  
+}
+
+/* memory buttons*/
+.btn-type-5{
+  background-color: #f1f8e9;  
+}
+
+/* equal/enter buttons*/
+.btn-type-6{
+   width: calc(95% + 6px);
+   background-color: #e8f5e9;
+}
+
+/*
+ +/- sign button
+.btn-type-7{
+  background-color: #99d6ff;  
+}
+
+"." sign button
+.btn-type-8{
+  background-color: #99d6ff;  
+}
+*/
+
+calcHistory{
+   
+}
+.txtAreaHistory{
+  width: 98%;
+  margin: 5px 0 2px 5px; 
+  height: 270px;
+  overflow-y: auto;
+  border: none; 
+  text-align: right;
+}
+.txtAreaHistory:empty{
+    text-align: left;
+}
