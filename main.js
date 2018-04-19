@@ -1,6 +1,7 @@
 $(function () {
     var resultArray = [];
     var mathResultInput = 0;
+    ;
     var afterOperator = false;
     class InputString {
         constructor(showItems, inputItems) {
@@ -17,29 +18,34 @@ $(function () {
 
 
     function simpleAritmetic(addendum, operator) {
+        var addNumber = BigNumber(addendum);
+        var base = BigNumber(mathResultInput);
         switch (operator) {
             case "+":
             {
-                mathResultInput += addendum;
+                base = base.plus(addNumber);
+                mathResultInput = base;
                 break;
             }
             case "-":
             {
-                mathResultInput -= addendum;
+                base = base.minus(addNumber);
+                mathResultInput = base;
                 break;
             }
             case "*":
             {
-                mathResultInput *= addendum;
+                base = base.times(addNumber);
+                mathResultInput = base;
                 break;
             }
             case "/":
             {
-                mathResultInput /= addendum;
+                base = base.dividedBy(addNumber);
+                mathResultInput = base;
                 break;
             }
         }
-        alert(mathResultInput);
     }
 
     function inputAutofocus() {
@@ -58,6 +64,7 @@ $(function () {
 
     function checkFirtCharNull(inputS) {
         if (inputS.length === 1 && inputS === "0") {
+            alert(inputS.length);
             $("#inputString").text("");
             $("#inputString").val("");
         }
@@ -84,7 +91,7 @@ $(function () {
             var storedOperator = resultArray[i + 1].getShowItems;
             showString = showString + storedNumber + storedOperator;
         }
-        $("#showInput").text(">" + showString);
+        $("#showInput").text(showString);
     }
 
 
@@ -131,26 +138,29 @@ $(function () {
         if (testStart != 0) {
             (testStart.substring(0, 1) === "-") ? $("#inputString").val(testStart.substring(1)) : $("#inputString").val("-" + testStart);
         }
+        afterOperator = false;
     });
+
     $(document).on("click", ".btn-type-2", function () {
-        var inputString = $("#inputString").val();      
-        
+        var inputString = $("#inputString").val();
+
         if (!afterOperator) {
             addToArray(inputString, inputString);
             addToArray($(this).text(), $(this).val());
-            if(resultArray.length>2){
-                var arrayLength=resultArray.length;
-                var addendum = parseInt(resultArray[arrayLength - 2].getInputItems);
+            if (resultArray.length > 2) {
+                var arrayLength = resultArray.length;
+                var addendum = resultArray[arrayLength - 2].getInputItems;
                 var operator = resultArray[arrayLength - 3].getInputItems;
                 simpleAritmetic(addendum, operator);
                 afterOperator = true;
-            }else{
-               mathResultInput = parseInt(resultArray[0].getInputItems);  
-            } 
+            } else {
+                mathResultInput = resultArray[0].getInputItems;
+                afterOperator = true;
+            }
         } else {
             updateArray($(this).text(), $(this).val(), resultArray.length - 1);
             afterOperator = true;
-        }        
+        }
         showHistoryLabel();
         $("#inputString").text(mathResultInput);
         $("#inputString").val(mathResultInput);
@@ -159,11 +169,19 @@ $(function () {
 
     // managing events from the calculator screen: button .
     $(document).on("click", ".btn-type-8", function () {
-        var testStart = $("#inputString").val();
-        var decimalPosition = testStart.indexOf(".");
-        if (decimalPosition < 0) {
-            $("#inputString").val(testStart + ".");
+        if (!afterOperator) {
+            var testStart = $("#inputString").val();
+            var decimalPosition = testStart.indexOf(".");
+            if (decimalPosition < 0) {
+                $("#inputString").val(testStart + ".");
+            }
+        }else{
+           $("#inputString").val("0.");
+           $("#inputString").text("0."); 
         }
+
+
+        afterOperator = false;
     });
     //managing event from the keys
     $(document).on("keydown", function (e) {
