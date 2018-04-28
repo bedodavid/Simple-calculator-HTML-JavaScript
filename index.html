@@ -31,6 +31,7 @@
                     <div class=" col-xs-7">
                         <div class="row">
                             <div class="showRow col-12">
+                                <button class="scrollLabel" id="scrollLeft"><</button>
                                 <label id="showInput" class="showInput"> </label>    
                             </div>                             
                         </div>
@@ -43,27 +44,27 @@
                         </div>
                         <div class="row buttonrows">
                             <div class="col-xs-2">
-                                <button class="btn-type-5" title="Store Memory">MS</button>    
+                                <button class="btn-type-5" title="Store Memory" value="ms">MS</button>    
                             </div>
                             <div class="col-xs-2">
-                                <button class="btn-type-3">x<sup>3</sup></button>    
+                                <button class="btn-type-3" value="pow3">x<sup>3</sup></button>    
                             </div>  
                             <div class="col-xs-2">
-                                <button class="btn-type-3">x<sup>2</sup></button>    
+                                <button class="btn-type-3" value="pow2">x<sup>2</sup></button>    
                             </div>
                             <div class="col-xs-2">
-                                <button class="btn-type-3">1/x</button>    
+                                <button class="btn-type-3" value="inv">1/x</button>    
                             </div>
                             <div class="col-xs-2">
-                                <button class="btn-type-3">&#8730</button>    
+                                <button class="btn-type-3" value="sqrt">&#8730</button>    
                             </div>  
                             <div class="col-xs-2">
-                                <button class="btn-type-3">%</button>    
+                                <button class="btn-type-9" value="percent">%</button>    
                             </div>  
                         </div>
                         <div class="row buttonrows">
                             <div class="col-xs-2">
-                                <button class="btn-type-5" title="Memory add">M+</button>    
+                                <button class="btn-type-5" title="Memory add" value="m+">M+</button>    
                             </div>
                             <div class="col-xs-2">
                                 <button class="btn-type-1" value="7">7</button>    
@@ -75,15 +76,15 @@
                                 <button class="btn-type-1">9</button>    
                             </div>
                             <div class="col-xs-2">
-                                <button class="btn-type-4">&#8592;</button>    
+                                <button value="del" class="btn-type-4" title="Delete last character">&#8592;</button>    
                             </div>  
                             <div class="col-xs-2">
-                                <button class="btn-type-4" title="Clear all">AC</button>    
+                                <button value="clear" class="btn-type-4" title="Clear all">AC</button>    
                             </div>  
                         </div>
                         <div class="row buttonrows">
                             <div class="col-xs-2">
-                                <button class="btn-type-5" title="Memory subtract">M-</button>    
+                                <button class="btn-type-5" title="Memory subtract" value="m-">M-</button>    
                             </div>
                             <div class="col-xs-2">
                                 <button class="btn-type-1">4</button>    
@@ -103,7 +104,7 @@
                         </div>
                         <div class="row buttonrows">
                             <div class="col-xs-2">
-                                <button class="btn-type-5" title="Memory clear">MC</button>    
+                                <button class="btn-type-5" id="mc" title="Memory clear" value="mc" disabled>MC</button>    
                             </div>
                             <div class="col-xs-2">
                                 <button class="btn-type-1">1</button>    
@@ -123,7 +124,7 @@
                         </div>
                         <div class="row buttonrows">
                             <div class="col-xs-2">
-                                <button class="btn-type-5" title="Memory recall">MR</button>    
+                                <button class="btn-type-5"  id="mr" title="Memory recall" value="mr" disabled>MR</button>    
                             </div>
                             <div class="col-xs-2">
                                 <button class="btn-type-7">&#177</button>    

@@ -39,8 +39,13 @@ body{
 .showInput{
   width: 78%; 
   text-align: right;
+  white-space:nowrap;
+  overflow-x: auto;  
  }
 
+ #showInput::-webkit-scrollbar { 
+    display: none; 
+}
 .showRow{
  display:flex;
  justify-content: center;
@@ -70,6 +75,7 @@ body{
  padding-left:0;
  padding-right: 0;
 }
+
 
 [class*="btn-type-"]{
     width: 95%;
@@ -112,6 +118,11 @@ body{
   background-color: #f1f8e9;  
 }
 
+.btn-type-5:disabled{
+  filter: brightness(90%);  
+}
+
+
 /* equal/enter buttons*/
 .btn-type-6{
    width: calc(95% + 6px);
@@ -143,4 +154,8 @@ calcHistory{
 }
 .txtAreaHistory:empty{
     text-align: left;
+}
+.scrollLabel{
+    visibility: hidden;
+    
 }
