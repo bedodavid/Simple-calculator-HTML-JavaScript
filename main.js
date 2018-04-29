@@ -18,21 +18,18 @@ $(function () {
             return this.inputItems;
         }
     }
+    
 
     function secondaryOperations(inputvalue, operator) {
-        var value = BigNumber(inputvalue);
-        var one = BigNumber(1);
+        var value = BigNumber(inputvalue);       
         var result;
         var inputBeforeComplexLength = inputBeforeComplex.length;
-        if (inputBeforeComplexLength === 0) {
-            inputBeforeComplex = $("#showInput").html();
-            inputBeforeComplexLength = inputBeforeComplex.length;
-        }
+        
 
         switch (operator) {
             case "sqrt":
             {
-                result = value.squareRoot().toPrecision(16);
+                result = value.squareRoot();
                 if (aftercomplex === "") {
                     aftercomplex = "&#8730(" + value + ")";
                 } else {
@@ -43,7 +40,8 @@ $(function () {
             }
             case "inv":
             {
-                result = one.dividedBy(value).toPrecision(16);
+                var one = BigNumber(1);
+                result = one.dividedBy(value);
                 if (aftercomplex === "") {
                     aftercomplex = "1/(" + value + ")";
                 } else {
@@ -53,7 +51,14 @@ $(function () {
             }
             case "pow2":
             {
-                result = value.times(value).toPrecision(16);
+                result = value.times(value);
+                var resultString=result.toString();
+                var rsStrLgt=resultString.length;                
+                if (rsStrLgt>17){
+                   var resultNumber=Number.parseFloat(resultString).toExponential(16); 
+                } else{
+                   var resultNumber=Number.parseFloat(resultString); 
+                }               
                 if (aftercomplex === "") {
                     aftercomplex = "(" + value + ")<sup>2</sup>";
                 } else {
@@ -63,7 +68,8 @@ $(function () {
             }
             case "pow3":
             {
-                result = value.times(value).times(value).toPrecision(16);
+                result = value.times(value).times(value);
+                
                 if (aftercomplex === "") {
                     aftercomplex = "(" + value + ")<sup>3</sup>";
                 } else {
@@ -72,8 +78,11 @@ $(function () {
                 break;
             }
         }
-        $('#inputString').val(result);
-        $('#inputString').text(result);
+        $('#inputString').val(resultNumber);
+        $('#inputString').html(resultNumber);
+        if (inputBeforeComplexLength === 0) {
+            inputBeforeComplex = $("#showInput").html();           
+        }
         $("#showInput").html(inputBeforeComplex + aftercomplex);
 
     }
@@ -322,6 +331,7 @@ $(function () {
             (testStart.substring(0, 1) === "-") ? $("#inputString").val(testStart.substring(1)) : $("#inputString").val("-" + testStart);
         }
         afterOperator = false;
+        
     });
 
     // managing events from the calculator screen: button .
