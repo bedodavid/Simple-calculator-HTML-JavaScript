@@ -18,73 +18,128 @@ $(function () {
             return this.inputItems;
         }
     }
-    
+
+
+    function formatNumberToFloating(resultString) {
+        var rsStrLgt = resultString.length;
+        var decinamlPos=resultString.indexOf(".");
+        var resultNumber;
+        // FORMATING the result, how it will be showed in the input space 
+        if (decinamlPos !== -1) {
+            if (rsStrLgt > 16) {                
+                resultNumber = Number.parseFloat(resultString);
+                if (resultNumber>9999999999999999.9){
+                    resultNumber = Number.parseFloat(resultString).toExponential(16); 
+                }
+                
+            } else {
+                resultNumber = Number.parseFloat(resultString);
+            }
+        } else {
+            if (rsStrLgt > 16) {
+                resultNumber = Number.parseInt(resultString).toExponential(16);
+            } else {
+                resultNumber = Number.parseInt(resultString);
+            }
+        }
+        return resultNumber;
+    }
+   /* function roundNumber(inputString){
+        var needRounded=true;
+        var decimalPosition=inputString.indexOf(".");
+        var inputLength=inputString.length;
+        var i=decimalPosition;
+        if (decimalPosition!=-1){
+            while(needRounded&&i<inputLength-3){
+                if (inputString.charAt(i)!=0||inputString.charAt(i)!=9){
+                  needRounded=false;  
+                }
+                i++;
+            }
+        }
+        return needRounded;        
+    }  */
+   
+   
+   function clearAll(){
+       resultArray.length = 0;
+       mathResultInput = 0;
+       $('#inputString').val("0");
+       $('#inputString').text("0");
+       $("#showInput").text(" ");
+       aftercomplex = "";
+       inputBeforeComplex = "";
+   }
+   
+   
+    function manageShowComplex(result, value, firstPart, secondPart) {
+        var resultString = result.toString();
+        var resultNumber = formatNumberToFloating(resultString);
+
+        if (aftercomplex === "") {
+            aftercomplex = firstPart + value + secondPart;
+        } else {
+            aftercomplex = firstPart + aftercomplex + secondPart;
+        }
+
+        /* CHECKING: if any secondary operation is clicked the first time
+         yes: then save all the calculations made before the secondary operation into: "inputBeforeComplex"
+         
+         if is not the first secondary operation than just adds the current operation to the saved trunk. 
+         !!! IMPORTANT $("#showInput").html=" " as otherwise the inputBeforeComplex will be an empty string and this will allow a second
+         time to save the "inputBeforeComplex" if the trunk is an EMPTY string 
+         (this happens in case of just secondary operations are performed, so the first save is an empty string) */
+
+        var inputBeforeComplexLength = inputBeforeComplex.length;
+        if (inputBeforeComplexLength === 0) {
+            inputBeforeComplex = $("#showInput").html();
+        }
+        $("#showInput").html(inputBeforeComplex + aftercomplex);
+
+        return resultNumber;
+    }
+
 
     function secondaryOperations(inputvalue, operator) {
-        var value = BigNumber(inputvalue);       
+        var value = BigNumber(inputvalue);
         var result;
-        var inputBeforeComplexLength = inputBeforeComplex.length;
-        
-
+        var resultNumber;
         switch (operator) {
             case "sqrt":
             {
                 result = value.squareRoot();
-                if (aftercomplex === "") {
-                    aftercomplex = "&#8730(" + value + ")";
-                } else {
-                    aftercomplex = "&#8730(" + aftercomplex + ")";
-                }
-
+                resultNumber = manageShowComplex(result, value, "&#8730(", ")");
                 break;
             }
             case "inv":
             {
                 var one = BigNumber(1);
                 result = one.dividedBy(value);
-                if (aftercomplex === "") {
-                    aftercomplex = "1/(" + value + ")";
-                } else {
-                    aftercomplex = "1/(" + aftercomplex + ")";
-                }
+                resultNumber = manageShowComplex(result, value, "1/(", ")");
                 break;
             }
             case "pow2":
             {
                 result = value.times(value);
-                var resultString=result.toString();
-                var rsStrLgt=resultString.length;                
-                if (rsStrLgt>17){
-                   var resultNumber=Number.parseFloat(resultString).toExponential(16); 
-                } else{
-                   var resultNumber=Number.parseFloat(resultString); 
-                }               
-                if (aftercomplex === "") {
-                    aftercomplex = "(" + value + ")<sup>2</sup>";
-                } else {
-                    aftercomplex = "(" + aftercomplex + ")<sup>2</sup>";
-                }
+                resultNumber = manageShowComplex(result, value, "(", ")<sup>2</sup>");
                 break;
             }
             case "pow3":
             {
                 result = value.times(value).times(value);
-                
-                if (aftercomplex === "") {
-                    aftercomplex = "(" + value + ")<sup>3</sup>";
-                } else {
-                    aftercomplex = "(" + aftercomplex + ")<sup>3</sup>";
-                }
+                resultNumber = manageShowComplex(result, value, "(", ")<sup>3</sup>");
                 break;
             }
+            case "percent":
+            {
+                var base = BigNumber(mathResultInput);
+                result = base.times(value).div(100);               
+                resultNumber = result;
+            }
         }
+
         $('#inputString').val(resultNumber);
         $('#inputString').html(resultNumber);
-        if (inputBeforeComplexLength === 0) {
-            inputBeforeComplex = $("#showInput").html();           
-        }
-        $("#showInput").html(inputBeforeComplex + aftercomplex);
-
     }
 
 
@@ -118,7 +173,12 @@ $(function () {
             }
         }
     }
-
+   
+    function showScrollButtons(){
+        $(".scrollLabel").css("visibility","visible");
+        
+    };
+   
     function inputAutofocus() {
         $('#inputString').focus();
         //this moves to the begining of the input;
@@ -150,7 +210,7 @@ $(function () {
         resultArray[position] = inputModel;
     }
 
-    function showHistoryLabel() {
+    function showHistory(inputName) {
         var arrayLenght = resultArray.length;
         var showString = "";
         for (i = 0; i < arrayLenght - 1; i += 2) {
@@ -159,9 +219,16 @@ $(function () {
                 storedNumber = "(" + storedNumber + ")";
             }
             var storedOperator = resultArray[i + 1].getShowItems;
-            showString = showString + storedNumber + storedOperator;
+            showString = showString + storedNumber + " " + storedOperator + " ";
         }
-        $("#showInput").html(showString);
+        if(inputName=="#txtAreaHistory"){
+          $(inputName).html( $(inputName).html()+"\n"+showString+"\n"+$("#inputString").val());     
+        }else{
+          $(inputName).html(showString);
+          if (showString.length>47){
+            showScrollButtons();    
+          }          
+        }        
     }
 
 
@@ -173,6 +240,8 @@ $(function () {
         $("#inputString").text(inputVal + currentInput);
         $("#inputString").val(inputVal + currentInput);
     }
+
+
 
 
 // allowing only a couple of keys to operate
@@ -187,6 +256,14 @@ $(function () {
             e.preventDefault();
         }
     });
+
+  $("#scrollRight").on("click", function () {
+     $("#showInput").scrollLeft($("#showInput").scrollLeft()+10);     
+  });
+  
+  $("#scrollLeft").on("click", function () {
+     $("#showInput").scrollLeft($("#showInput").scrollLeft()-10);     
+  });
 
 
     // managing events from the calculator screen: number buttons 0-9
@@ -231,9 +308,10 @@ $(function () {
             updateArray($(this).text(), $(this).val(), resultArray.length - 1);
             afterOperator = true;
         }
-        showHistoryLabel();
-        $("#inputString").text(mathResultInput);
-        $("#inputString").val(mathResultInput);
+        showHistory("#showInput");
+        var resultNumber=formatNumberToFloating(mathResultInput.toString());
+        $("#inputString").text(resultNumber);
+        $("#inputString").val(resultNumber);
     });
 
 
@@ -248,30 +326,25 @@ $(function () {
 
     // managing events from the calculator screen: button AC
     $(document).on("click", ".btn-type-4", function () {
-        var operation=$(this).val();
-        if (operation==="clear"){
-         resultArray.length = 0;
-         mathResultInput = 0;
-        $('#inputString').val("");
-        $('#inputString').text("0");
-        $("#showInput").text("");
-        aftercomplex = "";
-        inputBeforeComplex = "";   
-        }else{
-            var inputStr=$('#inputString').val();
-            inputStr=inputStr.substr(0,inputStr.length-1);
-            if(inputStr.length>0){             
-            $('#inputString').val(inputStr);
-            $('#inputString').text(inputStr);   
-            }else{
-             $('#inputString').val("0");
-            $('#inputString').text("0");    
+        var operation = $(this).val();
+        if (operation === "clear") {
+            clearAll();
+        } else {
+            var inputStr = $('#inputString').val();
+            if (inputStr.length > 0) {
+                inputStr = inputStr.substr(0, inputStr.length - 1);
+                $('#inputString').val(inputStr);
+                $('#inputString').text(inputStr);
+                afterOperator = false;
+            } else {
+                $('#inputString').val("0");
+                $('#inputString').text("0");
             }
-           
-           
-           
+
+
+
         }
-        
+
     });
 
     $(document).on("click", ".btn-type-5", function () {
@@ -324,6 +397,35 @@ $(function () {
 
     });
 
+// MANAGE the "Equal" UI button  ("enter" from the keyboard)
+ $(document).on("click", ".btn-type-6", function () {
+     inputBeforeComplex = "";
+        var inputString = $("#inputString").val();       
+            if (aftercomplex === "") {
+                addToArray(inputString, inputString);
+            } else {
+                addToArray(aftercomplex, inputString);
+                aftercomplex = "";
+            }
+            addToArray($(this).text(), $(this).val());
+
+            if (resultArray.length > 2) {
+                var arrayLength = resultArray.length;
+                var addendum = resultArray[arrayLength - 2].getInputItems;
+                var operator = resultArray[arrayLength - 3].getInputItems;
+                simpleAritmetic(mathResultInput, addendum, operator);               
+            } else {
+                mathResultInput = resultArray[0].getInputItems;               
+            }        
+       
+        var resultNumber=formatNumberToFloating(mathResultInput.toString());        
+        $("#inputString").val(resultNumber);
+        showHistory("#txtAreaHistory");
+        clearAll();        
+    });
+
+
+
     // managing events from the calculator screen: button +-
     $(document).on("click", ".btn-type-7", function () {
         var testStart = $("#inputString").val();
@@ -331,7 +433,7 @@ $(function () {
             (testStart.substring(0, 1) === "-") ? $("#inputString").val(testStart.substring(1)) : $("#inputString").val("-" + testStart);
         }
         afterOperator = false;
-        
+
     });
 
     // managing events from the calculator screen: button .

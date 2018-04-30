@@ -38,14 +38,19 @@ body{
 
 .showInput{
   width: 78%; 
+  border: none; 
   text-align: right;
+  background-color: #e6e6e6;
   white-space:nowrap;
-  overflow-x: auto;  
+  overflow: hidden; 
+  
+  
  }
 
- #showInput::-webkit-scrollbar { 
+ .showInput::-webkit-scrollbar{ 
     display: none; 
-}
+ }
+ 
 .showRow{
  display:flex;
  justify-content: center;
@@ -141,21 +146,29 @@ body{
 }
 */
 
-calcHistory{
-   
-}
 .txtAreaHistory{
   width: 98%;
   margin: 5px 0 2px 5px; 
-  height: 270px;
+  height: 250px;
   overflow-y: auto;
   border: none; 
   text-align: right;
+  background-color: #e6e6e6;
 }
 .txtAreaHistory:empty{
     text-align: left;
 }
 .scrollLabel{
     visibility: hidden;
-    
+    border:none;
+    margin:0px 4px 7px 4px;
+    background-color:#e6e6e6;
+    border-radius: 5px;
+}
+.scrollLabel:hover{
+  filter: brightness(90%);    
+}
+
+.clearHistory{
+    align-self: flex-end;
 }
